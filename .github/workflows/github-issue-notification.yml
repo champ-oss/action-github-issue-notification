@@ -16,7 +16,7 @@ jobs:
         run: |
           echo "GIT_REPO=$(echo ${GITHUB_REPOSITORY} | sed -e 's|.*/||')" >> $GITHUB_ENV
           echo "GITHUB_WORKFLOW_NAME=$(echo ${GITHUB_WORKFLOW} | sed -e 's|.*/||')" >> $GITHUB_ENV
-          echo "GITHUB_REF_NAME=$(echo ${GITHUB_REF_NAME}) >> $GITHUB_ENV
+          echo "GITHUB_REF_NAME=$(echo ${GITHUB_REF_NAME})" >> $GITHUB_ENV
       - name: github-issue-notification
         uses: champ-oss/action-github-issue-notification@main
         with:
