@@ -1,0 +1,39 @@
+name: update
+description: https://github.com/champ-oss/jira-notication
+inputs:
+  GITHUB_TOKEN:
+    description: 'token for action'
+    required: true
+  GITHUB_ORG:
+    description: 'github org where workflow runs'
+    required: true
+  GITHUB_REPO:
+    description: 'github repo where workflow runs'
+    required: true
+  GITHUB_CUSTOM_LABEL:
+    description: 'custom label used in issue to query from'
+    required: true
+  GITHUB_BRANCH_LABEL:
+    description: 'branch label used in issue to search from'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: install python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: install python libs
+      shell: bash
+      run: cd ${{github.action_path}} && pip3 install -r requirements.txt
+    - name: run python script
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        GITHUB_ORG: ${{ inputs.GITHUB_ORG }}
+        GITHUB_REPO: ${{ inputs.GITHUB_REPO }}
+        GITHUB_CUSTOM_LABEL: ${{ inputs.GITHUB_CUSTOM_LABEL }}
+        GITHUB_BRANCH_LABEL: ${{ inputs.GITHUB_BRANCH_LABEL }}
+      run: |
+        python ${GITHUB_ACTION_PATH}/action-github-issue-notification.py

@@ -1,0 +1,32 @@
+name: github-issue-notification
+
+on:
+  push:
+  workflow_dispatch:
+
+concurrency: this
+
+jobs:
+  github-issue-notification:
+    needs: [ testjob ]
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: set-env-info
+        run: |
+          echo "GIT_REPO=$(echo ${GITHUB_REPOSITORY} | sed -e 's|.*/||')" >> $GITHUB_ENV
+          echo "GITHUB_WORKFLOW_NAME=$(echo ${GITHUB_WORKFLOW} | sed -e 's|.*/||')" >> $GITHUB_ENV
+      - name: github-issue-notification
+        uses: champ-oss/action-github-issue-notification@main
+        with:
+          GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
+          GITHUB_ORG: champ-oss
+          GITHUB_REPO: ${{ env.GIT_REPO }}
+          GITHUB_CUSTOM_LABEL: ${{ env.GITHUB_WORKFLOW_NAME }}
+          GITHUB_BRANCH_LABEL: ${{ env.GITHUB_REF_NAME }}
+  testjob:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test
+        run: exit 1
