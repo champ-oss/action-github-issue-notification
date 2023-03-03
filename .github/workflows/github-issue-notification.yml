@@ -9,7 +9,7 @@ concurrency: this
 jobs:
   github-issue-notification:
     needs: [ testjob ]
-    if: failure()
+    if: failure() && github.ref_name == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: set-env-info
